@@ -21,7 +21,7 @@ public class Category
         Validate();
     }
 
-    public void Validate()
+    private void Validate()
     {
         if (string.IsNullOrWhiteSpace(Name))
         {
@@ -47,5 +47,17 @@ public class Category
         {
             throw new EntityValidationException($"{nameof(Description)} should be less or equal 10.000 chatacters long");
         }
+    }
+
+    public void Activate()
+    {
+        IsActive = true;
+        Validate();
+    }
+
+    public void Deactivate()
+    {
+        IsActive = false;
+        Validate();
     }
 }
