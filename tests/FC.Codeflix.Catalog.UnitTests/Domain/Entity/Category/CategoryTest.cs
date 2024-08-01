@@ -88,4 +88,48 @@ public class CategoryTest
         var exception = Assert.Throws<EntityValidationException>(action);
         Assert.Equal("Description should not be empty or null", exception.Message);
     }
+    
+    [Theory(DisplayName = nameof(InstantiateErrorWhenNameIsLessThan3Characters))]
+    [Trait("Domain", "Category - Aggregates")]
+    [InlineData("Fi")]
+    [InlineData("F")]
+    public void InstantiateErrorWhenNameIsLessThan3Characters(string? invalidName)
+    {
+        //Arrange and Act
+        Action action = () => new DomainEntity.Category(invalidName!, "Category description");
+        
+        //Assert
+        var exception = Assert.Throws<EntityValidationException>(action);
+        Assert.Equal("Name should be at leats 3 chatacters long", exception.Message);
+    }
+    
+    [Fact(DisplayName = nameof(InstantiateErrorWhenNameIsGreaterThan255Characters))]
+    [Trait("Domain", "Category - Aggregates")]
+    public void InstantiateErrorWhenNameIsGreaterThan255Characters()
+    {
+        //Arrange
+        var invalidName = string.Join(null, Enumerable.Range(1, 256).Select(_ => "a").ToArray());
+        
+        //Act
+        Action action = () => new DomainEntity.Category(invalidName, "Category description");
+        
+        //Assert
+        var exception = Assert.Throws<EntityValidationException>(action);
+        Assert.Equal("Name should be less or equal 255 chatacters long", exception.Message);
+    }
+    
+    [Fact(DisplayName = nameof(InstantiateErrorWhenDescriptionIsGreaterThan10_000Characters))]
+    [Trait("Domain", "Category - Aggregates")]
+    public void InstantiateErrorWhenDescriptionIsGreaterThan10_000Characters()
+    {
+        //Arrange
+        var invalidDescription = string.Join(null, Enumerable.Range(1, 10001).Select(_ => "a").ToArray());
+        
+        //Act
+        Action action = () => new DomainEntity.Category("Category name", invalidDescription);
+        
+        //Assert
+        var exception = Assert.Throws<EntityValidationException>(action);
+        Assert.Equal("Description should be less or equal 10.000 chatacters long", exception.Message);
+    }
 }
