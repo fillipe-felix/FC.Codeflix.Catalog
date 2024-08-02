@@ -6,7 +6,7 @@ using FluentAssertions;
 
 using Moq;
 
-using UseCases = FC.Codeflix.Catalog.Application.UseCases.CreateCategory;
+using UseCases = FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
 
 namespace FC.Codeflix.Catalog.UnitTests.Application.CreateCategory;
 
@@ -19,7 +19,7 @@ public class CreateCategoryTest
         //Arrange
         var repositoryMock = new Mock<ICategoryRepository>();
         var unitOfWorkMock = new Mock<IUnitOfWork>();
-        var input = new CreateCategoryInput("Category Name", "Category Description", true);
+        var input = new UseCases.CreateCategoryInput("Category Name", "Category Description", true);
         var useCase = new UseCases.CreateCategory(repositoryMock.Object, unitOfWorkMock.Object);
 
         //Act
@@ -27,12 +27,11 @@ public class CreateCategoryTest
 
         //Assert
         output.Should().NotBeNull();
-        output.Id.Should().NotBeNullOrEmpty();
+        output.Id.Should().NotBeEmpty();
         output.Name.Should().Be("Category Name");
         output.Description.Should().Be("Category Description");
         output.IsActive.Should().BeTrue();
-        output.CreatedAt.Should().NotBeNull();
-        output.CreatedAt.Should().NotBe(default(DateTime));
+        output.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
         
         repositoryMock.Verify(x => x.Insert(It.IsAny<Category>(), It.IsAny<CancellationToken>()), Times.Once);
         unitOfWorkMock.Verify(x => x.Commit(It.IsAny<CancellationToken>()), Times.Once);
