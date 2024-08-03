@@ -285,7 +285,12 @@ public class CategoryTest
     {
         //Arrange
         var category = _fixture.GetValidCategory();
-        var invalidDescription = string.Join(null, Enumerable.Range(1, 10001).Select(_ => "a").ToArray());
+        var invalidDescription = _fixture.Faker.Commerce.ProductDescription();
+
+        while (invalidDescription.Length <= 10000)
+        {
+            invalidDescription = $"{invalidDescription} {_fixture.Faker.Commerce.ProductDescription()}";
+        }
         
         //Act
         Action action = () => category.Update(category.Name, invalidDescription);

@@ -1,4 +1,5 @@
 ﻿using FC.Codeflix.Catalog.Domain.Entity;
+using FC.Codeflix.Catalog.Domain.Exceptions;
 
 using FluentAssertions;
 
@@ -41,5 +42,49 @@ public class CreateCategoryTest
         
         repositoryMock.Verify(x => x.Insert(It.IsAny<Category>(), It.IsAny<CancellationToken>()), Times.Once);
         unitOfWorkMock.Verify(x => x.Commit(It.IsAny<CancellationToken>()), Times.Once);
+    }
+    
+    [Theory(DisplayName = nameof(ThrowWhenCantInstantiateAggregate))]
+    [Trait("Application", "CreateCategory - Use Cases")]
+    [MemberData(nameof(GetInvalidInputs))]
+    public async void ThrowWhenCantInstantiateAggregate(UseCases.CreateCategoryInput input, string exceptionMessage)
+    {
+        //Arrange
+        var useCase = new UseCases.CreateCategory(_fixture.GetRepositoryMock().Object, _fixture.GetUnitOfWorkMock().Object);
+
+        //Act
+        Func<Task> action = async () => await useCase.Handle(input, CancellationToken.None);
+
+        //Assert
+        await action
+            .Should()
+            .ThrowAsync<EntityValidationException>()
+            .WithMessage(exceptionMessage);
+    }
+
+    public static IEnumerable<object[]> GetInvalidInputs()
+    {
+        var fixture = new CreateCategoryTestFixture();
+        var invalidInputList = new List<object[]>();
+
+        //input com nome muito curto
+        var invalidInputShortName = fixture.GetValidCategoryInput();
+        invalidInputShortName.Name = invalidInputShortName.Name.Substring(0, 2);
+        invalidInputList.Add(new object[] { invalidInputShortName, "Name should be at leats 3 characters long." });
+        
+        //input com nome muito grande
+        var invalidInputLongName = fixture.GetValidCategoryInput();
+        var tooLongNameForCategory = fixture.Faker.Commerce.ProductName();
+        
+        while (tooLongNameForCategory.Length <= 255)
+        {
+            tooLongNameForCategory = $"{tooLongNameForCategory} {fixture.Faker.Commerce.ProductName()}";
+        }
+        
+        invalidInputLongName.Name = tooLongNameForCategory;
+        invalidInputList.Add(new object[] { invalidInputLongName, "Name should be less or equal 255 characters long." });
+        
+        
+        return invalidInputList;
     }
 }
