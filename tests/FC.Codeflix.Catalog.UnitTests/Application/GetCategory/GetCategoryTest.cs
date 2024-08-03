@@ -1,4 +1,6 @@
-﻿using Moq;
+﻿using FluentAssertions;
+
+using Moq;
 
 using UseCases = FC.Codeflix.Catalog.Application.UseCases.Category.GetCategory;
 
