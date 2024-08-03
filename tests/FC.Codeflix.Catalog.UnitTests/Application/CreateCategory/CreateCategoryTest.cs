@@ -1,6 +1,4 @@
-﻿using FC.Codeflix.Catalog.Application.Interfaces;
-using FC.Codeflix.Catalog.Domain.Entity;
-using FC.Codeflix.Catalog.Domain.Repository;
+﻿using FC.Codeflix.Catalog.Domain.Entity;
 
 using FluentAssertions;
 
@@ -10,16 +8,24 @@ using UseCases = FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategor
 
 namespace FC.Codeflix.Catalog.UnitTests.Application.CreateCategory;
 
+[Collection(nameof(CreateCategoryTestFixture))]
 public class CreateCategoryTest
 {
+    private readonly CreateCategoryTestFixture _fixture;
+
+    public CreateCategoryTest(CreateCategoryTestFixture fixture)
+    {
+        _fixture = fixture;
+    }
+
     [Fact(DisplayName = nameof(CreateCategory))]
     [Trait("Application", "CreateCategory - Use Cases")]
     public async void CreateCategory()
     {
         //Arrange
-        var repositoryMock = new Mock<ICategoryRepository>();
-        var unitOfWorkMock = new Mock<IUnitOfWork>();
-        var input = new UseCases.CreateCategoryInput("Category Name", "Category Description", true);
+        var repositoryMock = _fixture.GetRepositoryMock();
+        var unitOfWorkMock = _fixture.GetUnitOfWorkMock();
+        var input = _fixture.GetValidCategoryInput();
         var useCase = new UseCases.CreateCategory(repositoryMock.Object, unitOfWorkMock.Object);
 
         //Act
@@ -28,9 +34,9 @@ public class CreateCategoryTest
         //Assert
         output.Should().NotBeNull();
         output.Id.Should().NotBeEmpty();
-        output.Name.Should().Be("Category Name");
-        output.Description.Should().Be("Category Description");
-        output.IsActive.Should().BeTrue();
+        output.Name.Should().Be(input.Name);
+        output.Description.Should().Be(input.Description);
+        output.IsActive.Should().Be(input.IsActive);
         output.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
         
         repositoryMock.Verify(x => x.Insert(It.IsAny<Category>(), It.IsAny<CancellationToken>()), Times.Once);
