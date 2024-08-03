@@ -1,5 +1,4 @@
 ﻿using FC.Codeflix.Catalog.Application.Interfaces;
-using FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
 using FC.Codeflix.Catalog.Domain.Entity;
 using FC.Codeflix.Catalog.Domain.Repository;
 using FC.Codeflix.Catalog.UnitTests.Common;
@@ -10,6 +9,11 @@ namespace FC.Codeflix.Catalog.UnitTests.Application.DeleteCategory;
 
 public class DeleteCategoryTestFixture : BaseFixture
 {
+    public DeleteCategoryTestFixture() : base()
+    {
+        
+    }
+    
     public string GetValidCategoryName()
     {
         var categoryName = "";
@@ -48,8 +52,7 @@ public class DeleteCategoryTestFixture : BaseFixture
     
 }
 
-[Collection(nameof(DeleteCategoryTestFixture))]
+[CollectionDefinition(nameof(DeleteCategoryTestFixture))]
 public class DeleteCategoryTestFixtureCollection : ICollectionFixture<DeleteCategoryTestFixture>
 {
-    
 }
