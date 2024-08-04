@@ -1,4 +1,6 @@
-﻿using Moq;
+﻿using FluentAssertions;
+
+using Moq;
 
 using UseCases = FC.Codeflix.Catalog.Application.UseCases.Category.UpdateCategory;
 
@@ -23,7 +25,7 @@ public class UpdateCategoryTest
         var unitOfWorkMock = _fixture.GetUnitOfWorkMock();
         var exampleCategory = _fixture.GetValidCategory();
         var input = new UseCases.UpdateCategoryInput(exampleCategory.Id, _fixture.GetValidCategoryName(), _fixture.GetValidCategoryDescription(), !exampleCategory.IsActive);
-        var useCase = new UseCases.UpdateCategoryInput(repositoryMock.Object, unitOfWorkMock.Object);
+        var useCase = new UseCases.UpdateCategory(repositoryMock.Object, unitOfWorkMock.Object);
         
         repositoryMock
             .Setup(x => x.Get(exampleCategory.Id, It.IsAny<CancellationToken>()))
