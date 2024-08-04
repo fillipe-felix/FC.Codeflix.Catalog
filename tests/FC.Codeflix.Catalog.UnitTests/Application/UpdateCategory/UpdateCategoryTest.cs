@@ -1,4 +1,8 @@
-﻿using FluentAssertions;
+﻿using System.Runtime.Serialization;
+
+using FC.Codeflix.Catalog.Domain.Entity;
+
+using FluentAssertions;
 
 using Moq;
 
@@ -16,16 +20,15 @@ public class UpdateCategoryTest
         _fixture = fixture;
     }
 
-    [Fact(DisplayName = nameof(UpdateCategory))]
+    [Theory(DisplayName = nameof(UpdateCategory))]
     [Trait("Application", "UpdateCategory - Use Cases")]
-    public async Task UpdateCategory()
+    [MemberData(nameof(UpdateCategoryTestDataGenerator.GetCategoriesToUpdate), parameters: 10, MemberType = typeof(UpdateCategoryTestDataGenerator))]
+    public async Task UpdateCategory(Category exampleCategory, UseCases.UpdateCategoryInput input)
     {
         //Arrange
         var repositoryMock = _fixture.GetRepositoryMock();
         var unitOfWorkMock = _fixture.GetUnitOfWorkMock();
-        var exampleCategory = _fixture.GetValidCategory();
-        var input = new UseCases.UpdateCategoryInput(exampleCategory.Id, _fixture.GetValidCategoryName(), _fixture.GetValidCategoryDescription(), !exampleCategory.IsActive);
-        var useCase = new UseCases.UpdateCategory(repositoryMock.Object, unitOfWorkMock.Object);
+       var useCase = new UseCases.UpdateCategory(repositoryMock.Object, unitOfWorkMock.Object);
         
         repositoryMock
             .Setup(x => x.Get(exampleCategory.Id, It.IsAny<CancellationToken>()))
