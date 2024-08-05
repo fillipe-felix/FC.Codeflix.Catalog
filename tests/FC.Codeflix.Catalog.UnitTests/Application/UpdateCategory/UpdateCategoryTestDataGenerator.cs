@@ -11,11 +11,7 @@ public static class UpdateCategoryTestDataGenerator
         for (int i = 0; i < count; i++)
         {
             var exampleCategory = fixture.GetValidCategory();
-            var input = new UpdateCategoryInput(
-                exampleCategory.Id, 
-                fixture.GetValidCategoryName(), 
-                fixture.GetValidCategoryDescription(), 
-                !fixture.GetRandomBoolean());
+            var input = fixture.GetValidInput(exampleCategory.Id);
             
             yield return new object[] { exampleCategory, input };
         }
