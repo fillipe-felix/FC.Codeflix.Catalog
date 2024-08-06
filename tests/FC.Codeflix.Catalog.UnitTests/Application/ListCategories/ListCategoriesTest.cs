@@ -30,6 +30,13 @@ public class ListCategoriesTest
             sort: "name",
             dir: SearchOrder.Asc
         );
+        var outputRepositorySearch = new OutputSearch<Category>(
+            currentPage: input.Page,
+            perPage: input.PerPage,
+            items: (IReadOnlyList<Category>)categoriesExampleList,
+            total: 70
+        );
+        
         repositoryMock.Setup(x => x.Search(
             It.Is<SearchInput>(
                 searchInput.Page == input.Page &&
@@ -39,12 +46,7 @@ public class ListCategoriesTest
                 searchInput.Order == input.Dir
             ),
             It.IsAny<CancellationToken>()
-        )).ReturnAsync(new OutputSearch<Category>(
-            currentPage: input.Page,
-            perPage: input.PerPage,
-            items: (IReadOnlyList<Category>) categoriesExampleList,
-            total: 70
-        ));
+        )).ReturnAsync(outputRepositorySearch);
 
         var useCase = new UseCases.ListCategories(repositoryMock.Object);
 
@@ -53,6 +55,20 @@ public class ListCategoriesTest
 
         //Assert
         output.Should().NotBeNull();
-        output.Should().BeEquivalentTo(categoriesExampleList);
+        output.Should().BeEquivalentTo(outputRepositorySearch);
+        output.Page.Should().Be(outputRepositorySearch.Page);
+        output.PerPage.Should().Be(outputRepositorySearch.PerPage);
+        output.Total.Should().Be(outputRepositorySearch.Total);
+        output.Items.Should().HaveCount(outputRepositorySearch.Items.Count);
+        output.Items.Should().BeEquivalentTo(outputRepositorySearch.Items);
+        
+        repositoryMock.Verify(x => x.Search(
+            It.Is<SearchInput>(
+                searchInput.Page == input.Page &&
+                searchInput.PerPage == input.PerPage &&
+                searchInput.Search == input.Search &&
+                searchInput.OrderBy == input.Sort &&
+                searchInput.Order == input.Dir
+            , It.IsAny<CancellationToken>())), Times.Once);
     }
 }
