@@ -59,7 +59,7 @@ public class ListCategoriesTestFixture : BaseFixture
     }
 }
 
-[Collection(nameof(ListCategoriesTestFixture))]
+[CollectionDefinition(nameof(ListCategoriesTestFixture))]
 public class ListCategoriesTestFixtureCollection : ICollectionFixture<ListCategoriesTestFixture>
 {
     
