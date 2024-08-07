@@ -24,7 +24,7 @@ public class GetCategoryTest
     {
         //Arrange
         var repositoryMock = _fixture.GetRepositoryMock();
-        var exampleCategory = _fixture.GetValidCategory();
+        var exampleCategory = _fixture.GetExampleCategory();
         var input = new UseCases.GetCategoryInput(exampleCategory.Id);
         var useCase = new UseCases.GetCategory(repositoryMock.Object);
 
