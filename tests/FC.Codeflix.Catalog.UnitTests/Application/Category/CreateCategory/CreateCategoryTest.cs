@@ -1,5 +1,4 @@
-﻿using FC.Codeflix.Catalog.Domain.Entity;
-using FC.Codeflix.Catalog.Domain.Exceptions;
+﻿using FC.Codeflix.Catalog.Domain.Exceptions;
 
 using FluentAssertions;
 
@@ -7,7 +6,7 @@ using Moq;
 
 using UseCases = FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
 
-namespace FC.Codeflix.Catalog.UnitTests.Application.CreateCategory;
+namespace FC.Codeflix.Catalog.UnitTests.Application.Category.CreateCategory;
 
 [Collection(nameof(CreateCategoryTestFixture))]
 public class CreateCategoryTest
@@ -40,7 +39,7 @@ public class CreateCategoryTest
         output.IsActive.Should().Be(input.IsActive);
         output.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
         
-        repositoryMock.Verify(x => x.Insert(It.IsAny<Category>(), It.IsAny<CancellationToken>()), Times.Once);
+        repositoryMock.Verify(x => x.Insert(It.IsAny<Catalog.Domain.Entity.Category>(), It.IsAny<CancellationToken>()), Times.Once);
         unitOfWorkMock.Verify(x => x.Commit(It.IsAny<CancellationToken>()), Times.Once);
     }
     
@@ -65,7 +64,7 @@ public class CreateCategoryTest
         output.IsActive.Should().BeTrue();
         output.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
         
-        repositoryMock.Verify(x => x.Insert(It.IsAny<Category>(), It.IsAny<CancellationToken>()), Times.Once);
+        repositoryMock.Verify(x => x.Insert(It.IsAny<Catalog.Domain.Entity.Category>(), It.IsAny<CancellationToken>()), Times.Once);
         unitOfWorkMock.Verify(x => x.Commit(It.IsAny<CancellationToken>()), Times.Once);
     }
     
@@ -90,7 +89,7 @@ public class CreateCategoryTest
         output.IsActive.Should().BeTrue();
         output.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
         
-        repositoryMock.Verify(x => x.Insert(It.IsAny<Category>(), It.IsAny<CancellationToken>()), Times.Once);
+        repositoryMock.Verify(x => x.Insert(It.IsAny<Catalog.Domain.Entity.Category>(), It.IsAny<CancellationToken>()), Times.Once);
         unitOfWorkMock.Verify(x => x.Commit(It.IsAny<CancellationToken>()), Times.Once);
     }
     

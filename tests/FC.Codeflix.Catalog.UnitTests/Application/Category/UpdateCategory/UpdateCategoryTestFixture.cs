@@ -1,12 +1,11 @@
 ﻿using FC.Codeflix.Catalog.Application.UseCases.Category.UpdateCategory;
-using FC.Codeflix.Catalog.Domain.Entity;
-using FC.Codeflix.Catalog.UnitTests.Application.Common;
+using FC.Codeflix.Catalog.UnitTests.Application.Category.Common;
 
-namespace FC.Codeflix.Catalog.UnitTests.Application.UpdateCategory;
+namespace FC.Codeflix.Catalog.UnitTests.Application.Category.UpdateCategory;
 
 public class UpdateCategoryTestFixture : CategoryUseCasesBaseFixture
 {
-    public Category GetValidCategory() => new Category(GetValidCategoryName(), GetValidCategoryDescription(), GetRandomBoolean());
+    public Catalog.Domain.Entity.Category GetValidCategory() => new Catalog.Domain.Entity.Category(GetValidCategoryName(), GetValidCategoryDescription(), GetRandomBoolean());
 
     public UpdateCategoryInput GetValidInput(Guid? id = null)
     {

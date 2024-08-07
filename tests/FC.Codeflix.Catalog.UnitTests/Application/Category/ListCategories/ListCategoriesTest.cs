@@ -1,13 +1,12 @@
-﻿using FC.Codeflix.Catalog.Domain.Entity;
-using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
+﻿using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 
 using FluentAssertions;
 
-using UseCases = FC.Codeflix.Catalog.Application.UseCases.Category.ListCategories;
-
 using Moq;
 
-namespace FC.Codeflix.Catalog.UnitTests.Application.ListCategories;
+using UseCases = FC.Codeflix.Catalog.Application.UseCases.Category.ListCategories;
+
+namespace FC.Codeflix.Catalog.UnitTests.Application.Category.ListCategories;
 
 [Collection(nameof(ListCategoriesTestFixture))]
 public class ListCategoriesTest
@@ -28,7 +27,7 @@ public class ListCategoriesTest
         var repositoryMock = _fixture.GetRepositoryMock();
         var input = _fixture.GetExampleInput();
         
-        var outputRepositorySearch = new SearchOutput<Category>(
+        var outputRepositorySearch = new SearchOutput<Catalog.Domain.Entity.Category>(
             currentPage: input.Page,
             perPage: input.PerPage,
             items: categoriesExampleList,
@@ -78,7 +77,7 @@ public class ListCategoriesTest
         var categoriesExampleList = _fixture.GetExampleCategoriesList();
         var repositoryMock = _fixture.GetRepositoryMock();
         
-        var outputRepositorySearch = new SearchOutput<Category>(
+        var outputRepositorySearch = new SearchOutput<Catalog.Domain.Entity.Category>(
             currentPage: input.Page,
             perPage: input.PerPage,
             items: categoriesExampleList,
@@ -127,10 +126,10 @@ public class ListCategoriesTest
         var repositoryMock = _fixture.GetRepositoryMock();
         var input = _fixture.GetExampleInput();
         
-        var outputRepositorySearch = new SearchOutput<Category>(
+        var outputRepositorySearch = new SearchOutput<Catalog.Domain.Entity.Category>(
             currentPage: input.Page,
             perPage: input.PerPage,
-            items: new List<Category>().AsReadOnly(),
+            items: new List<Catalog.Domain.Entity.Category>().AsReadOnly(),
             total: 0
         );
 
