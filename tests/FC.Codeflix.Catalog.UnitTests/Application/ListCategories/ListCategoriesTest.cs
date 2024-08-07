@@ -118,4 +118,52 @@ public class ListCategoriesTest
                                searchInput.Order == input.Dir)
             , It.IsAny<CancellationToken>()), Times.Once);
     }
+    
+    [Fact(DisplayName = nameof(ListWhenEmpty))]
+    [Trait("Application", "ListCategories - Use Cases")]
+    public async Task ListWhenEmpty()
+    {
+        //Arrange
+        var repositoryMock = _fixture.GetRepositoryMock();
+        var input = _fixture.GetExampleInput();
+        
+        var outputRepositorySearch = new SearchOutput<Category>(
+            currentPage: input.Page,
+            perPage: input.PerPage,
+            items: new List<Category>().AsReadOnly(),
+            total: 0
+        );
+
+        repositoryMock.Setup(x => x.Search(
+            It.Is<SearchInput>(
+                searchInput => searchInput.Page == input.Page &&
+                               searchInput.PerPage == input.PerPage &&
+                               searchInput.Search == input.Search &&
+                               searchInput.OrderBy == input.Sort &&
+                               searchInput.Order == input.Dir
+            ),
+            It.IsAny<CancellationToken>()
+        )).ReturnsAsync(outputRepositorySearch);
+
+        var useCase = new UseCases.ListCategories(repositoryMock.Object);
+
+        //Act
+        var output = await useCase.Handle(input, CancellationToken.None);
+
+        //Assert
+        output.Should().NotBeNull();
+        output.Page.Should().Be(outputRepositorySearch.CurrentPage);
+        output.PerPage.Should().Be(outputRepositorySearch.PerPage);
+        output.Total.Should().Be(0);
+        output.Items.Should().HaveCount(0);
+
+        repositoryMock.Verify(x => x.Search(
+            It.Is<SearchInput>(
+                searchInput => searchInput.Page == input.Page &&
+                               searchInput.PerPage == input.PerPage &&
+                               searchInput.Search == input.Search &&
+                               searchInput.OrderBy == input.Sort &&
+                               searchInput.Order == input.Dir)
+            , It.IsAny<CancellationToken>()), Times.Once);
+    }
 }
