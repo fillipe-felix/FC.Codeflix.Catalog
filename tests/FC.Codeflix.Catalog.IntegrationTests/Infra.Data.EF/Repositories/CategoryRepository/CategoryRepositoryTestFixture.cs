@@ -10,10 +10,6 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.Catego
 
 public class CategoryRepositoryTestFixture : BaseFixture
 {
-    public CategoryRepositoryTestFixture(Faker faker) : base(faker)
-    {
-    }
-
     public string GetValidCategoryName()
     {
         var categoryName = "";
@@ -52,9 +48,10 @@ public class CategoryRepositoryTestFixture : BaseFixture
 
     public CodeflixCatalogDbContext CreateDbContext()
     {
-        var dbContext = new CodeflixCatalogDbContext(new DbContextOptionsBuilder<CodeflixCatalogDbContext>())
+        var dbContext = new CodeflixCatalogDbContext(new DbContextOptionsBuilder<CodeflixCatalogDbContext>()
             .UseInMemoryDatabase("integration-tests-db")
-            .Options;
+            .Options
+        );
 
         return dbContext;
     }

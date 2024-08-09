@@ -6,8 +6,8 @@ public class BaseFixture
 {
     protected Faker Faker { get; set; }
 
-    public BaseFixture(Faker faker)
+    public BaseFixture()
     {
-        Faker = faker;
+        Faker = new Faker("pt_BR");
     }
 }

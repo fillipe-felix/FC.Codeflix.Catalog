@@ -1,5 +1,7 @@
 ﻿using FC.Codeflix.Catalog.Infra.Data.EF;
 
+using Repository = FC.Codeflix.Catalog.Infra.Data.EF.Configurations.Repositories;
+
 using FluentAssertions;
 
 namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.CategoryRepository;
@@ -22,7 +24,7 @@ public class CategoryRepositoryTest
         CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
         var exampleCategory = _fixture.GetExampleCategory();
 
-        var categoryRepository = new CategoryRepository(dbContext);
+        var categoryRepository = new Repository.CategoryRepository(dbContext);
 
         //Act
         await categoryRepository.Insert(exampleCategory, CancellationToken.None);

@@ -10,7 +10,7 @@ public class CodeflixCatalogDbContext : DbContext
 {
     public DbSet<Category> Categories { get; set; }
     
-    public CodeflixCatalogDbContext(DbContextOptions<CodeflixCatalogDbContext> oprions) : base(oprions)
+    public CodeflixCatalogDbContext(DbContextOptions<CodeflixCatalogDbContext> options) : base(options)
     {
         
     }
