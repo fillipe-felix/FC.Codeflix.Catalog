@@ -1,4 +1,8 @@
-﻿namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.CategoryRepository;
+﻿using FC.Codeflix.Catalog.Infra.Data.EF;
+
+using FluentAssertions;
+
+namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.CategoryRepository;
 
 [Collection(nameof(CategoryRepositoryTestFixture))]
 public class CategoryRepositoryTest
