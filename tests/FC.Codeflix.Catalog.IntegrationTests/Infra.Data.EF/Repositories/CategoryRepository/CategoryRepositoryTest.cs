@@ -83,4 +83,32 @@ public class CategoryRepositoryTest
             .ThrowAsync<NotFoundException>()
             .WithMessage($"Category '{exampleId}' not found.");
     }
+    
+    [Fact(DisplayName = nameof(Update))]
+    [Trait("Integration/Infra.Data", "CategoryRepository - Repositories")]
+    public async Task Update()
+    {
+        //Arrange
+        CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
+        var exampleCategory = _fixture.GetExampleCategory();
+        var newCategoryValues = _fixture.GetExampleCategory();
+        var exampleCategoriesList = _fixture.GetExampleCategoriesList();
+        exampleCategoriesList.Add(exampleCategory);
+        
+        dbContext.Categories.AddRange(exampleCategoriesList);
+        await dbContext.SaveChangesAsync(CancellationToken.None);
+        
+        exampleCategory.Update(newCategoryValues.Name, newCategoryValues.Description);
+        
+        var categoryRepository = new Repository.CategoryRepository(dbContext);
+
+        //Act
+        await categoryRepository.Update(exampleCategory, CancellationToken.None);
+        await dbContext.SaveChangesAsync();
+
+        //Assert
+        var dbCategory = await dbContext.Categories.FindAsync(exampleCategory.Id);
+        dbCategory.Should().NotBeNull();
+        dbCategory.Should().BeEquivalentTo(exampleCategory);
+    }
 }
