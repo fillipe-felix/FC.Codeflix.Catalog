@@ -35,4 +35,27 @@ public class CategoryRepositoryTest
         dbCategory.Should().NotBeNull();
         dbCategory.Should().BeEquivalentTo(exampleCategory);
     }
+    
+    [Fact(DisplayName = nameof(Get))]
+    [Trait("Integration/Infra.Data", "CategoryRepository - Repositories")]
+    public async Task Get()
+    {
+        //Arrange
+        CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
+        var exampleCategory = _fixture.GetExampleCategory();
+        var exampleCategoriesList = _fixture.GetExampleCategoriesList();
+        exampleCategoriesList.Add(exampleCategory);
+        
+        dbContext.Categories.AddRange(exampleCategoriesList);
+        await dbContext.SaveChangesAsync(CancellationToken.None);
+        
+        var categoryRepository = new Repository.CategoryRepository(dbContext);
+
+        //Act
+        var dbCategory = await categoryRepository.Get(exampleCategory.Id, CancellationToken.None);
+
+        //Assert
+        dbCategory.Should().NotBeNull();
+        dbCategory.Should().BeEquivalentTo(exampleCategory);
+    }
 }

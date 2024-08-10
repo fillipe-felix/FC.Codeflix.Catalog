@@ -1,6 +1,4 @@
-﻿using Bogus;
-
-using FC.Codeflix.Catalog.Domain.Entity;
+﻿using FC.Codeflix.Catalog.Domain.Entity;
 using FC.Codeflix.Catalog.Infra.Data.EF;
 using FC.Codeflix.Catalog.IntegrationTests.Base;
 
@@ -54,6 +52,14 @@ public class CategoryRepositoryTestFixture : BaseFixture
         );
 
         return dbContext;
+    }
+
+    public List<Category> GetExampleCategoriesList(int length = 10)
+    {
+        return Enumerable
+            .Range(1, length)
+            .Select(_ => GetExampleCategory())
+            .ToList();
     }
 }
 
