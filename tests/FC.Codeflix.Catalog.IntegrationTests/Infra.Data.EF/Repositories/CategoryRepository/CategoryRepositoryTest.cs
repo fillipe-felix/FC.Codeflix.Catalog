@@ -32,7 +32,7 @@ public class CategoryRepositoryTest
         await dbContext.SaveChangesAsync(CancellationToken.None);
 
         //Assert
-        var dbCategory = await dbContext.Categories.FindAsync(exampleCategory.Id);
+        var dbCategory = await _fixture.CreateDbContext().Categories.FindAsync(exampleCategory.Id);
         dbCategory.Should().NotBeNull();
         dbCategory.Should().BeEquivalentTo(exampleCategory);
     }
@@ -50,7 +50,7 @@ public class CategoryRepositoryTest
         dbContext.Categories.AddRange(exampleCategoriesList);
         await dbContext.SaveChangesAsync(CancellationToken.None);
         
-        var categoryRepository = new Repository.CategoryRepository(dbContext);
+        var categoryRepository = new Repository.CategoryRepository(_fixture.CreateDbContext());
 
         //Act
         var dbCategory = await categoryRepository.Get(exampleCategory.Id, CancellationToken.None);
@@ -72,7 +72,7 @@ public class CategoryRepositoryTest
         dbContext.Categories.AddRange(exampleCategoriesList);
         await dbContext.SaveChangesAsync(CancellationToken.None);
         
-        var categoryRepository = new Repository.CategoryRepository(dbContext);
+        var categoryRepository = new Repository.CategoryRepository(_fixture.CreateDbContext());
 
         //Act
         var task = async () => await categoryRepository.Get(exampleId, CancellationToken.None);
@@ -97,7 +97,6 @@ public class CategoryRepositoryTest
         
         dbContext.Categories.AddRange(exampleCategoriesList);
         await dbContext.SaveChangesAsync(CancellationToken.None);
-        
         exampleCategory.Update(newCategoryValues.Name, newCategoryValues.Description);
         
         var categoryRepository = new Repository.CategoryRepository(dbContext);
@@ -107,7 +106,7 @@ public class CategoryRepositoryTest
         await dbContext.SaveChangesAsync();
 
         //Assert
-        var dbCategory = await dbContext.Categories.FindAsync(exampleCategory.Id);
+        var dbCategory = await _fixture.CreateDbContext().Categories.FindAsync(exampleCategory.Id);
         dbCategory.Should().NotBeNull();
         dbCategory.Should().BeEquivalentTo(exampleCategory);
     }
