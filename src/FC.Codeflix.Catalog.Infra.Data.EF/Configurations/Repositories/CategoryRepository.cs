@@ -31,9 +31,9 @@ public class CategoryRepository : ICategoryRepository
         return category!;
     }
 
-    public Task Delete(Category aggregate, CancellationToken cancellationToken)
+    public async Task Delete(Category aggregate, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await Task.FromResult(_categories.Remove(aggregate));
     }
 
     public async Task Update(Category aggregate, CancellationToken cancellationToken)
