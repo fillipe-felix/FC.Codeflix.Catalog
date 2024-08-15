@@ -66,6 +66,17 @@ public class CategoryRepositoryTestFixture : BaseFixture
             .Select(_ => GetExampleCategory())
             .ToList();
     }
+    
+    public List<Category> GetExampleCategoriesListWithNames(IList<string> names)
+    {
+        return names.Select(name =>
+        {
+            var category = GetExampleCategory();
+            category.Update(name);
+            
+            return category;
+        }).ToList();
+    }
 }
 
 [CollectionDefinition(nameof(CategoryRepositoryTestFixture))]
