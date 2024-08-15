@@ -1,4 +1,5 @@
 ﻿using FC.Codeflix.Catalog.Application.Exceptions;
+using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 using FC.Codeflix.Catalog.Infra.Data.EF;
 
 using Repository = FC.Codeflix.Catalog.Infra.Data.EF.Configurations.Repositories;
@@ -32,7 +33,7 @@ public class CategoryRepositoryTest
         await dbContext.SaveChangesAsync(CancellationToken.None);
 
         //Assert
-        var dbCategory = await _fixture.CreateDbContext().Categories.FindAsync(exampleCategory.Id);
+        var dbCategory = await _fixture.CreateDbContext(true).Categories.FindAsync(exampleCategory.Id);
         dbCategory.Should().NotBeNull();
         dbCategory.Should().BeEquivalentTo(exampleCategory);
     }
@@ -50,7 +51,7 @@ public class CategoryRepositoryTest
         dbContext.Categories.AddRange(exampleCategoriesList);
         await dbContext.SaveChangesAsync(CancellationToken.None);
         
-        var categoryRepository = new Repository.CategoryRepository(_fixture.CreateDbContext());
+        var categoryRepository = new Repository.CategoryRepository(_fixture.CreateDbContext(true));
 
         //Act
         var dbCategory = await categoryRepository.Get(exampleCategory.Id, CancellationToken.None);
@@ -106,7 +107,7 @@ public class CategoryRepositoryTest
         await dbContext.SaveChangesAsync();
 
         //Assert
-        var dbCategory = await _fixture.CreateDbContext().Categories.FindAsync(exampleCategory.Id);
+        var dbCategory = await _fixture.CreateDbContext(true).Categories.FindAsync(exampleCategory.Id);
         dbCategory.Should().NotBeNull();
         dbCategory.Should().BeEquivalentTo(exampleCategory);
     }
@@ -133,5 +134,33 @@ public class CategoryRepositoryTest
         //Assert
         var dbCategory = await _fixture.CreateDbContext().Categories.FindAsync(exampleCategory.Id);
         dbCategory.Should().BeNull();
+    }
+    
+    [Fact(DisplayName = nameof(SearchReturnsListAndTotal))]
+    [Trait("Integration/Infra.Data", "CategoryRepository - Repositories")]
+    public async Task SearchReturnsListAndTotal()
+    {
+        //Arrange
+        CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
+        var exampleCategoriesList = _fixture.GetExampleCategoriesList();
+        
+        await dbContext.Categories.AddRangeAsync(exampleCategoriesList);
+        await dbContext.SaveChangesAsync(CancellationToken.None);
+        
+        var categoryRepository = new Repository.CategoryRepository(dbContext);
+
+        var searchInput = new SearchInput(1, 20, "", "", SearchOrder.Asc);
+
+        //Act
+        var output = await categoryRepository.Search(searchInput, CancellationToken.None);
+
+        //Assert
+        output.Should().NotBeNull();
+        output.Items.Should().NotBeNull();
+        output.CurrentPage.Should().Be(searchInput.Page);
+        output.PerPage.Should().Be(searchInput.PerPage);
+        output.Total.Should().Be(exampleCategoriesList.Count);
+        output.Items.Should().HaveCount(exampleCategoriesList.Count);
+        output.Items.Should().BeEquivalentTo(exampleCategoriesList);
     }
 }
