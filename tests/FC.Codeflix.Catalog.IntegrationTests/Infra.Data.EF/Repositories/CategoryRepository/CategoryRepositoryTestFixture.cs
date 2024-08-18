@@ -1,4 +1,5 @@
 ﻿using FC.Codeflix.Catalog.Domain.Entity;
+using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 using FC.Codeflix.Catalog.Infra.Data.EF;
 using FC.Codeflix.Catalog.IntegrationTests.Base;
 
@@ -76,6 +77,23 @@ public class CategoryRepositoryTestFixture : BaseFixture
             
             return category;
         }).ToList();
+    }
+    
+    public List<Category> CloneCategoriesListOrdered(List<Category> categories, string orderBy, SearchOrder order)
+    {
+        var listClone = new List<Category>(categories);
+        var orderedEnumerable = (orderBy.ToLower(), order) switch
+        {
+            ("name", SearchOrder.Asc) => listClone.OrderBy(c => c.Name),
+            ("name", SearchOrder.Desc) => listClone.OrderByDescending(c => c.Name),
+            ("id", SearchOrder.Asc) => listClone.OrderBy(c => c.Id),
+            ("id", SearchOrder.Desc) => listClone.OrderByDescending(c => c.Id),
+            ("createdat", SearchOrder.Asc) => listClone.OrderBy(c => c.CreatedAt),
+            ("createdat", SearchOrder.Desc) => listClone.OrderByDescending(c => c.CreatedAt),
+            _ => listClone.OrderBy(x => x.Name)
+        };
+        
+        return orderedEnumerable.ToList();
     }
 }
 
